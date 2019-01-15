@@ -190,11 +190,47 @@ map<char,string> shannon(string rs,int n,map<int,char>& m)
   return map1;
 }
 
+string get_data()
+{
+  fstream f("binary.out", fstream::in );
+  string s;
+  string file_contents;
+  while(std::getline(f, s))
+   {
+    s.erase(0,2);
+     file_contents+= s;
+
+     file_contents.push_back('\n');
+   }
+
+  f.close();  
+  return file_contents;
+
+}
+void eraseDemo(string& str) 
+{ 
+  // Deletes all characters between 0th index and 
+  // str.end() - 6 
+  int n=str.find("1");
+  int m= str.find("0");
+  int len = str.length();
+  if (n>=0)
+  { 
+  str.erase(0,n); 
+   }
+  else if(str[len]==0){
+    str.erase(0,len-1);
+  }
+}
+
 int main()
 {
  string data;
  map<int,char>probability_map;
  map<char,string> com;
+ map<string, char> reverseMap;
+ map<string, char>:: iterator revit;
+
  map<int,char>::iterator it;
  map<char,string>::iterator comit;
  vector<int> vec;
@@ -214,59 +250,93 @@ int main()
 
  vec =  sorting(probability_map);
  int n= vec.size();
-
-
  rs = recusion(vec);
-
-
  com = shannon(rs,n,probability_map);
+ for(comit = com.begin(); comit != com.end(); comit++)
+      reverseMap[comit->second] = comit->first;
   
-  for (it=probability_map.begin() ; it!=probability_map.end() ; it++) 
-    cout << "(" << (*it).first << ", "
-      << (*it).second << ")" << endl;
-      if( remove( "ForgetCodeWrite.out" ) != 0 )
+  // for (it=probability_map.begin() ; it!=probability_map.end() ; it++) 
+  //   cout << "(" << (*it).first << ", "
+  //     << (*it).second << ")" << endl;
+  cout<<"\n==================\n";
+
+  if( remove( "binary.out" ) != 0 )
     perror( "Error deleting file" );
   else
     puts( "File successfully deleted" );
- cout<<"\n==================\n";
+
+  ofstream appendFile("binary.out", ios_base::app);
+  ofstream outputfile("ouput.txt",ios_base::app);
+  
   for(char x: data){
-  //   com.find(x)->first;
-  // }
       comit = com.find(x);
       if(comit == com.end()) 
         cout << "Key-value pair not present in map \n" ; 
     else
         cout << "Key-value pair present : " 
-            << comit->first << "->" << comit->second <<endl; 
+             << comit->first << "->" << comit->second <<endl; 
 
-
-  // Test<n> name;
    std::string alpha_bit_string = comit->second; 
-    std::bitset<8> b1(alpha_bit_string, 0, alpha_bit_string.size(), 
+    std::bitset<6> b1(alpha_bit_string, 0, alpha_bit_string.size(), 
                       '0', '1'); 
-  cout<<endl<<b1;
+  // cout<<endl<<b1;
 
-    // std::bitset<10> first( "101011" ) ;
-// static_assert( first.size() <= std::numeric_limits<unsigned long>::digits, "too many bits" ) ;
-
-// write
-
-    // std::ofstream output("binary.bin", ios_base::binary);
-    // unsigned long n = b1.to_ulong() ;
-    // output.write( reinterpret_cast<const char*>(&n), sizeof(n) ) ;
-  
-    ofstream appendFile("ForgetCodeWrite1.bin", ios_base::app);
- 
+   
   if (appendFile.fail()) {
     cerr << "Unable to open file for writing." << endl;
     exit(1);
   }
  
   appendFile << b1 << endl;
- 
-  appendFile.close();
+ }
+  appendFile.close();    
 
-    
-    
+  cout<<"\n========== Decoding ===========\n";
+
+ string data2;
+ fstream f("binary.out", fstream::in );
+  string s;
+  string file_contents;
+  while(std::getline(f, s))
+   {
+    s.erase(0,2);
+    eraseDemo(s);
+    revit = reverseMap.find(s);
+    if(revit == reverseMap.end()) 
+          cout << "Key-value pair not present in map \n" ; 
+    else
+      {
+            outputfile << revit->second; 
+
       }
+
+     file_contents+= s;
+
+     file_contents.push_back('\n');
+   }
+
+  f.close();  
+  outputfile.close();
+  // return file_contents;
+ // cout<<data2;
+
+ // for(revit = reverseMap.begin();revit != reverseMap.end();revit++)
+ // {
+   
+ //  cout << '\t' << revit->first 
+ //       << '\t' << revit->second << '\n'; 
+ // }
+ // for(char x :data2)
+ // {
+ //  revit = reverseMap.find(x);
+ //  if(comit == com.end()) 
+ //        cout << "Key-value pair not present in map \n" ; 
+ //  else
+ //    {
+ //        cout << "Key-value pair present : " 
+ //             << revit->first << "->" << revit->second <<endl; 
+ //    }
+
+ // }
+
 }
