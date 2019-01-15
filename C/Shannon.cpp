@@ -1,16 +1,18 @@
 #include <bits/stdc++.h>
+#include <boost/dynamic_bitset.hpp>
 #include <fstream>
 #include <type_traits>
+#include <bitset> 
 using namespace std;
 int str_pos=0;
 // void probability(string);
 // int count1(string,char);
-string stacks(string final);
+
 string recusion(vector<int> & v);
 vector<int> sorting(const std::map<int,char>&);
 
 // void shannon(vector<int>&left, vector<int>& right,string ls,string rs,vector<int> v);
-map<string,char> shannon(string rs,int n,map<int,char>& m);
+map<char,string> shannon(string rs,int n,map<int,char>& m);
 void mapping(set<string>& s1,map<int,char>& probability_map,vector<int>& v);
 
 string removeSpaces(string str) 
@@ -107,66 +109,11 @@ string recusion(vector<int> & v) {
             rs.append("1");
 
     }
- //    cout<<"left"<<endl;
- //    for(it=leftbit.begin();it!=leftbit.end();it++)
- //    	cout<<*it<<endl;
 
- // cout<<"right"<<endl;
- //     std::copy(rightbit.begin(), rightbit.end(), std::ostream_iterator<int>(std::cout, " , ") );
-	// std::cout<<endl;
     recusion(left);
     recusion(right);
     return rs;
 }
-// void shannon(vector<int>&left, vector<int>& right,string ls,string rs,vector<int> v)
-
-// {
-// 	// cout<<"left string is \t"<<ls<<endl;
-	// cout<<"right string is \t"<<rs<<endl;
- //    string final;
- //    vector<int>::iterator it;
-    
- //    it = v.begin();
- //    cout<<"\n it was \t"<<*it;
- //    final.append(ls);
- //    it++;
- //    for (it=it; it != v.end()-1; ++it) {
- //    	  cout<<"\n it was \t"<<*it;
- //        final.append(rs.append(ls));
- //    }
- //    it = v.end();
- //    final.append(rs);
-
-
- //   for(int i=0;i<final.size();i++)
- //   {
- //   	 cout<<final[i];
- //   }
-
- //   cout<<"\n final.size() is"<<final.size();
-
-
-
- //    for (it=v.begin(); it != v.end(); ++it) {
- //        cout<<"The vector is \t"<<*it<<endl;
- //    }
-
-   // ofstream outdata;
-   // outdata.open("output.txt",ios::app);
-   // vector<int>::iterator it;
-   // for (it= leftbit.begin();it != leftbit.end();it++)
-
-   //    outdata << *it << endl;
-   // outdata.close();
-	// vector<int>::iterator it;
-	// for(it=leftbit.begin();it!= leftbit.end();it++)
-	// {
-	//   // for(it=rightbit.begin();it!= rightbit.end();it++)	
-	//   // {
-	//   	cout<<"\n"<< *it<<"\t";
-	// }
-// }
-
 string split(string final, string word)
 {
   int i=0;
@@ -184,17 +131,14 @@ string split(string final, string word)
       break;
    }
   }
-      
- 
- 
- 
+
   inttemp= temp - str_pos;
   s = final.substr(str_pos,inttemp);
   if (temp!=0)
     str_pos=temp+1;  
   return s;
 }
-map<string,char> shannon(string rs,int n,map<int,char>& m)
+map<char,string> shannon(string rs,int n,map<int,char>& m)
 { 
 	string final = "";
   // map<char, int>::iterator itm ; 
@@ -219,7 +163,7 @@ map<string,char> shannon(string rs,int n,map<int,char>& m)
     
    
     string word;
-    map<string,char> map1;
+    map<char,string> map1;
     
   
   char ch;
@@ -230,12 +174,12 @@ map<string,char> shannon(string rs,int n,map<int,char>& m)
   {
         ch = (char)rit->second;
         temp_str = split(final,word);
-       map1.insert(pair<string,char>(temp_str,ch));
+       map1.insert(pair<char,string>(ch,temp_str));
      // ch = (char)rit->second;
      //  map1.insert(pair<char,string>(ch,"abd"));
  
   } 
-   std::map<string,char>::iterator itm;
+   std::map<char,string>::iterator itm;
   
   for (itm=map1.begin(); itm!=map1.end(); itm++)
   {
@@ -246,14 +190,13 @@ map<string,char> shannon(string rs,int n,map<int,char>& m)
   return map1;
 }
 
-
-
 int main()
 {
  string data;
  map<int,char>probability_map;
- map<string,char> com;
+ map<char,string> com;
  map<int,char>::iterator it;
+ map<char,string>::iterator comit;
  vector<int> vec;
  string ls,rs;
  set<string> set1;
@@ -271,25 +214,59 @@ int main()
 
  vec =  sorting(probability_map);
  int n= vec.size();
+
+
  rs = recusion(vec);
 
 
  com = shannon(rs,n,probability_map);
- 
- //  std::copy(vec.begin(), vec.end(), std::ostream_iterator<int>(std::cout, " , ") );
-	// std::cout<<endl;
-
   
-
- 
   for (it=probability_map.begin() ; it!=probability_map.end() ; it++) 
     cout << "(" << (*it).first << ", "
       << (*it).second << ")" << endl;
+      if( remove( "ForgetCodeWrite.out" ) != 0 )
+    perror( "Error deleting file" );
+  else
+    puts( "File successfully deleted" );
+ cout<<"\n==================\n";
+  for(char x: data){
+  //   com.find(x)->first;
+  // }
+      comit = com.find(x);
+      if(comit == com.end()) 
+        cout << "Key-value pair not present in map \n" ; 
+    else
+        cout << "Key-value pair present : " 
+            << comit->first << "->" << comit->second <<endl; 
+
+
+  // Test<n> name;
+   std::string alpha_bit_string = comit->second; 
+    std::bitset<8> b1(alpha_bit_string, 0, alpha_bit_string.size(), 
+                      '0', '1'); 
+  cout<<endl<<b1;
+
+    // std::bitset<10> first( "101011" ) ;
+// static_assert( first.size() <= std::numeric_limits<unsigned long>::digits, "too many bits" ) ;
+
+// write
+
+    // std::ofstream output("binary.bin", ios_base::binary);
+    // unsigned long n = b1.to_ulong() ;
+    // output.write( reinterpret_cast<const char*>(&n), sizeof(n) ) ;
   
+    ofstream appendFile("ForgetCodeWrite1.bin", ios_base::app);
+ 
+  if (appendFile.fail()) {
+    cerr << "Unable to open file for writing." << endl;
+    exit(1);
+  }
+ 
+  appendFile << b1 << endl;
+ 
+  appendFile.close();
 
-     //reverse iterator
-  //     std::map<int,char>::reverse_iterator rit;
-  // for (rit=probability_map.rbegin(); rit!=probability_map.rend(); ++rit)
-  //   std::cout << rit->first << " => " << rit->second << '\n';
-
+    
+    
+      }
 }
