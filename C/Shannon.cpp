@@ -3,10 +3,11 @@
 #include <bitset>
 using namespace std;
 int str_pos = 0;
+
 string recusion(vector<int> &v);
-vector<int> sorting(const std::map<int, char> &);
-map<char, string> shannon(string rs, int n, map<int, char> &m);
-void mapping(set<string> &s1, map<int, char> &probability_map, vector<int> &v);
+vector<int> sorting(const std::map<char,int> &);
+map<char, string> shannon(string rs, int n, map<char,int> &m);
+// void mapping(set<string> &s1, map<int, char> &probability_map, vector<int> &v);
 
 //Removes space from Input string aka from file
 string removeSpaces(string str)
@@ -28,7 +29,7 @@ string get_input()
   string s;
   getline(f, s);
   f.close();
-  s = removeSpaces(s);
+  // s = removeSpaces(s);
   cout << s << endl;
   return s;
 }
@@ -45,41 +46,46 @@ int count1(string s, char c)
   }
   return count_var;
 }
+
 //arranging all things in map
-map<int, char> probability(string str)
+map<char,int> probability(string str)
 {
-  str = removeSpaces(str);
-  map<int, char> mymap;
-  map<int, char>::iterator it;
+ // str = removeSpaces(str);
+  // cout<<"Okay "<<str<<"\t";
+ 
+  map<char,int> revmap;
+  map<char,int>::iterator reviit;
+  // map<int, char>::iterator it;
   int counter;
   char c;
-  for (auto it = str.begin(); it != str.end(); ++it)
+  for (string::iterator it = str.begin(); it != str.end(); ++it)
   {
     c = (char)*it;
+    cout<<"char is "<<c<<"\t";
     counter = count1(str, c);
-    mymap.insert(pair<int, char>(counter, c));
+    cout<<"Conter is "<<counter<<endl;
+    revmap.insert(pair<char,int>(c,counter));
   }
-  // it = mymap.begin();
 
-  return mymap;
+  return revmap;
 }
 // returns vector having decending order
-vector<int> sorting(const std::map<int, char> &mymap)
+vector<int> sorting(const std::map<char, int> &mymap)
 {
-  map<int, char> element;
-  typedef function<bool(std::pair<int, char>, std::pair<int, char>)> Comparator;
+  map<char, int> element;
+  typedef function<bool(std::pair<char, int>, std::pair<char, int>)> Comparator;
   Comparator compFunctor =
-      [](pair<int, char> elem1, pair<int, char> elem2) {
+      [](pair<char, int> elem1, pair<char, int> elem2) {
         return elem1.first >= elem2.first;
       };
-  set<pair<int, char>, Comparator> setOfWords(mymap.begin(), mymap.end(), compFunctor);
+  set<pair<char, int>, Comparator> setOfWords(mymap.begin(), mymap.end(), compFunctor);
   vector<int> vec;
   vec.reserve(mymap.size());
   cout << "size is" << vec.size();
-  for (pair<int, char> mymap : setOfWords)
+  for (pair<char, int> mymap : setOfWords)
   {
     cout << mymap.first << " :: " << mymap.second << endl;
-    vec.push_back(mymap.first);
+    vec.push_back(mymap.second);
   }
 
   return vec;
@@ -129,8 +135,9 @@ string split(string final, string word)
   return s;
 }
 // Encoding logic part
-map<char, string> shannon(string rs, int n, map<int, char> &m)
+map<char, string> shannon(string rs, int n, map<char,int> &m)
 {
+  typedef pair<char,int> pair;
   string final = "";
   // map<char, int>::iterator itm ;
   string stk;
@@ -153,13 +160,28 @@ map<char, string> shannon(string rs, int n, map<int, char> &m)
   map<char, string> map1;
   char ch;
   string temp_str;
-  std::map<int, char>::reverse_iterator rit;
-  //reverse map iteration so Desending
-  for (rit = m.rbegin(); rit != m.rend(); ++rit)
-  {
-    ch = (char)rit->second;
+  std::map<char,int>::reverse_iterator rit;
+
+  vector<pair> vec;
+  copy(m.begin(),
+      m.end(),
+      back_inserter<vector<pair>>(vec));
+  sort(vec.begin(), vec.end(),
+      [](const pair& l, const pair& r) {
+        if (l.second != r.second)
+          return l.second > r.second;
+
+        return l.first > r.first;
+      });
+  for (auto par: vec) { 
+  // for (rit = m.rbegin(); rit != m.rend(); ++rit)
+  // {
+    ch = (char)par.first;
+    cout<<"\n ch is"<<ch;
     temp_str = split(final, word);
-    map1.insert(pair<char, string>(ch, temp_str));
+    cout<<"\n temp_str is"<<temp_str;
+    map1.insert({ch,temp_str});
+    
   }
   std::map<char, string>::iterator itm;
 
@@ -189,20 +211,21 @@ void eraseDemo(string &str)
 
 int main()
 {
+  
   string data;
-  map<int, char> probability_map;
+  map<char,int> probability_map;
   map<char, string> com;
   map<string, char> reverseMap;
   map<string, char>::iterator revit;
 
-  map<int, char>::iterator it;
+  map<char,int>::iterator it;
   map<char, string>::iterator comit;
   vector<int> vec;
   string ls, rs;
   set<string> set1;
 
   data = get_input();
-  data = removeSpaces(data);
+ // data = removeSpaces(data);
   probability_map = probability(data);
   cout << "\tKEY\tELEMENT\n";
   for (it = probability_map.begin(); it != probability_map.end(); it++)
@@ -215,13 +238,17 @@ int main()
   vec = sorting(probability_map);
   int n = vec.size();
   rs = recusion(vec);
+  
+
+
+  // //give shannon to int,char map
   com = shannon(rs, n, probability_map);
   for (comit = com.begin(); comit != com.end(); comit++)
     reverseMap[comit->second] = comit->first;
 
   cout << "\n==================\n";
 
-  if (remove("binary.out") != 0)
+  if (remove("krupa1.KP11") != 0)
     perror("Error deleting file");
   else
     puts("File successfully deleted");
@@ -231,7 +258,7 @@ int main()
   else
     puts("File successfully deleted");
 
-  ofstream codedFile("binary.out", ios_base::app);
+  ofstream codedFile("krupa1.KP11", ios_base::app);
   ofstream outputfile("ouput.txt", ios_base::app);
 
   for (char x : data)
@@ -258,12 +285,12 @@ int main()
   cout << "\n========== Decoding ===========\n";
 
   string data2;
-  fstream f("binary.out", fstream::in);
+  fstream f("krupa1.KP11", fstream::in);
   string s;
   string file_contents;
   while (std::getline(f, s))
   {
-    s.erase(0, 2);
+    // s.erase(0, 2);
     eraseDemo(s);
     revit = reverseMap.find(s);
     if (revit == reverseMap.end())
