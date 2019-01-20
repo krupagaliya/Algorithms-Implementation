@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <iostream>  
+#include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <boost/dynamic_bitset.hpp>
@@ -7,8 +7,8 @@ using namespace std;
 int str_pos = 0;
 int str_pos_zero = 0;
 string recusion(vector<int> &v);
-vector<int> sorting(const std::map<char,int> &);
-map<char, string> shannon(string rs, int n, map<char,int> &m);
+vector<int> sorting(const std::map<char, int> &);
+map<char, string> shannon(string rs, int n, map<char, int> &m);
 
 //Removes space from Input string aka from file
 string removeSpaces(string str)
@@ -49,23 +49,23 @@ int count1(string s, char c)
 }
 
 //arranging all things in map
-map<char,int> probability(string str)
+map<char, int> probability(string str)
 {
- // str = removeSpaces(str);
+  // str = removeSpaces(str);
   // cout<<"Okay "<<str<<"\t";
- 
-  map<char,int> revmap;
-  map<char,int>::iterator reviit;
+
+  map<char, int> revmap;
+  map<char, int>::iterator reviit;
   // map<int, char>::iterator it;
   int counter;
   char c;
   for (string::iterator it = str.begin(); it != str.end(); ++it)
   {
     c = (char)*it;
-    cout<<"char is "<<c<<"\t";
+    cout << "char is " << c << "\t";
     counter = count1(str, c);
-    cout<<"Conter is "<<counter<<endl;
-    revmap.insert(pair<char,int>(c,counter));
+    cout << "Conter is " << counter << endl;
+    revmap.insert(pair<char, int>(c, counter));
   }
 
   return revmap;
@@ -136,9 +136,9 @@ string split(string final, string word)
   return s;
 }
 // Encoding logic part
-map<char, string> shannon(string rs, int n, map<char,int> &m)
+map<char, string> shannon(string rs, int n, map<char, int> &m)
 {
-  typedef pair<char,int> pair;
+  typedef pair<char, int> pair;
   string final = "";
   // map<char, int>::iterator itm ;
   string stk;
@@ -161,26 +161,26 @@ map<char, string> shannon(string rs, int n, map<char,int> &m)
   map<char, string> map1;
   char ch;
   string temp_str;
-  std::map<char,int>::reverse_iterator rit;
+  std::map<char, int>::reverse_iterator rit;
 
   vector<pair> vec;
   copy(m.begin(),
-      m.end(),
-      back_inserter<vector<pair>>(vec));
+       m.end(),
+       back_inserter<vector<pair>>(vec));
   sort(vec.begin(), vec.end(),
-      [](const pair& l, const pair& r) {
-        if (l.second != r.second)
-          return l.second > r.second;
+       [](const pair &l, const pair &r) {
+         if (l.second != r.second)
+           return l.second > r.second;
 
-        return l.first > r.first;
-      });
-  for (auto par: vec) { 
-  
+         return l.first > r.first;
+       });
+  for (auto par : vec)
+  {
+
     ch = (char)par.first;
     temp_str = split(final, word);
     // cout<<"\n temp_str is"<<temp_str;
-    map1.insert({ch,temp_str});
-    
+    map1.insert({ch, temp_str});
   }
   std::map<char, string>::iterator itm;
 
@@ -208,152 +208,118 @@ void eraseDemo(string &str)
   }
 }
 
-void write_to_file(boost::dynamic_bitset<> str,string codes){
-     if (remove("krupa1.dat") != 0)
+void write_to_file(boost::dynamic_bitset<> str, string codes)
+{
+  if (remove("krupa1.dat") != 0)
     perror("Error deleting file");
   else
     puts("File successfully deleted");
-    unsigned char buffer = 0;
-    unsigned int cnt = 0;
-    int index;
-    unsigned char bit;
-    for (int i = 0; i < codes.size(); i++)
-    {
-          
-      if (codes[i] == '1')
-      {
-        str[i] = 1;
-      }
-      else if(codes[i] == ' ')
-    
-        str[i]= 'w';        
-    }
-   
-    ofstream fout("krupa1.dat", ios::out | ios::binary | ios_base::app);
-    if(!fout){
-        cout<<"Cannot open file to write"<<endl;    exit(1);
-    }
-    index = str.size()-1;
-    for (int i=index; i>-1; i--){
-        bit = str.test(i);
-        buffer <<= 1;
-        if (bit){
-            buffer |= 1;
-        }
-        cnt++;
-        if (cnt == 8){
-            fout<<buffer;
-            buffer = 0;
-            cnt = 0;
-        }
-    }
-     if (cnt != 0){
-        while (cnt != 8){
-            cnt++;
-            buffer <<= 1;
-        }
-        fout<<buffer;
-    }
-}
-boost::dynamic_bitset<> read_from_file(string file, int m){
-    ifstream fin(file, ios::in | ios::binary);
-    if(!fin){
-        cout<<"Cannot open file to write"<<endl;    exit(1);
-    }
-    boost::dynamic_bitset<> str(m);
-    int k = 0, cnt = 0;
-    unsigned char bit;
-    string code="", tmp;
-    while(getline(fin, tmp)){
-        if(cnt==0)
-            code += tmp;
-        else
-            code += '\n' + tmp;
-        cnt++;
-    }
-    for(auto t : code){
-        bitset<8> s(t);
-        for(int i=7; i>-1; i--){
-            bit = s.test(i);
-
-            if(bit)
-                str[k++] = 1;
-            else if(bit == 'w')
-              str[k++] = ' ';
-            else
-                str[k++] = 0;
-            if(k == m)
-                break;
-        }
-    }
-    return str;
-}
-
-string split_by_zero(string final,string rs,map<string, char> r)
-{
-  
- int lenrs = rs.length();
-  int i = 0;
-  int inttemp;
-  int temp;
-  char spc = '0';
- string s = "";
-  for (i = str_pos_zero; i < final.size(); i++)
+  unsigned char buffer = 0;
+  unsigned int cnt = 0;
+  int index;
+  unsigned char bit;
+  for (int i = 0; i < codes.size(); i++)
   {
-   
-    if (final[i] == spc )
+
+    if (codes[i] == '1')
     {
-
-      cout<<"\n o si at"<<i;
-      temp = i;
-      break;
+      str[i] = 1;
     }
-    else if(final.substr(i,lenrs) == rs)
-      {str_pos = temp+lenrs; 
-    
-      }
-  }
-  inttemp = temp - (str_pos_zero-1);
-  s = final.substr(str_pos_zero, inttemp);
-  
-  if (temp != 0)
-    str_pos_zero = temp + 1;
-  if(temp == 0)
-    str_pos_zero = temp + 1;
+    else if (codes[i] == ' ')
 
-  return s;
-}
-int size_comuter(map<char,string>reverseMap)
-{
- 
-  for (map<char,string>::iterator revit = reverseMap.begin(); revit != reverseMap.end(); revit++)
+      str[i] = 'w';
+  }
+
+  ofstream fout("krupa1.dat", ios::out | ios::binary | ios_base::app);
+  if (!fout)
   {
-    string soo= revit->second;
-
-    cout<<soo.size()<<"\t";
-
-   
+    cout << "Cannot open file to write" << endl;
+    exit(1);
   }
-  cout<<"\n";
-}   
+  index = str.size() - 1;
+  for (int i = index; i > -1; i--)
+  {
+    bit = str.test(i);
+    buffer <<= 1;
+    if (bit)
+    {
+      buffer |= 1;
+    }
+    cnt++;
+    if (cnt == 8)
+    {
+      fout << buffer;
+      buffer = 0;
+      cnt = 0;
+    }
+  }
+  if (cnt != 0)
+  {
+    while (cnt != 8)
+    {
+      cnt++;
+      buffer <<= 1;
+    }
+    fout << buffer;
+  }
+}
+boost::dynamic_bitset<> read_from_file(string file, int m)
+{
+  ifstream fin(file, ios::in | ios::binary);
+  if (!fin)
+  {
+    cout << "Cannot open file to write" << endl;
+    exit(1);
+  }
+  boost::dynamic_bitset<> str(m);
+  int k = 0, cnt = 0;
+  unsigned char bit;
+  string code = "", tmp;
+  while (getline(fin, tmp))
+  {
+    if (cnt == 0)
+      code += tmp;
+    else
+      code += '\n' + tmp;
+    cnt++;
+  }
+  for (auto t : code)
+  {
+    bitset<8> s(t);
+    for (int i = 7; i > -1; i--)
+    {
+      bit = s.test(i);
+
+      if (bit)
+        str[k++] = 1;
+      else if (bit == 'w')
+        str[k++] = ' ';
+      else
+        str[k++] = 0;
+      if (k == m)
+        break;
+    }
+  }
+  return str;
+}
 
 int main()
 {
-  
+
   string data;
-  map<char,int> probability_map;
+  map<char, int> probability_map;
   map<char, string> com;
   map<string, char> reverseMap;
   map<string, char>::iterator revit;
 
-  map<char,int>::iterator it;
+  map<char, int>::iterator it;
   map<char, string>::iterator comit;
   vector<int> vec;
   string ls, rs;
   set<string> set1;
 
   data = get_input();
- // data = removeSpaces(data);
+  // data = removeSpaces(data);
   probability_map = probability(data);
   cout << "\tKEY\tELEMENT\n";
   for (it = probability_map.begin(); it != probability_map.end(); it++)
@@ -366,8 +332,6 @@ int main()
   vec = sorting(probability_map);
   int n = vec.size();
   rs = recusion(vec);
-  
-  
 
   // //give shannon to int,char map
   com = shannon(rs, n, probability_map);
@@ -376,68 +340,62 @@ int main()
 
   cout << "\n==================\n";
 
-  
-
   if (remove("ouput.txt") != 0)
     perror("Error deleting file");
   else
     puts("File successfully deleted");
 
   // ofstream codedFile("krupa1.dat", ios_base::app);
-   ofstream outputfile("ouput.txt", ios_base::app);
-   vector<int> s1; 
- 
+  ofstream outputfile("ouput.txt", ios_base::app);
+  vector<int> s1;
+
   string leno = "";
   int assign_bit = 0;
-  
-  for(int i=0;i<data.length();i++)
+
+  for (int i = 0; i < data.length(); i++)
   {
-         comit = com.find(data[i]);
-         if (comit == com.end())
-           cout << "Key-value pair not present in map \n";
-         else
-         {
-            cout << "Key-value pair present : "
+    comit = com.find(data[i]);
+    if (comit == com.end())
+      cout << "Key-value pair not present in map \n";
+    else
+    {
+      cout << "Key-value pair present : "
            << comit->first << "->" << comit->second << endl;
-
-
-         }
-        assign_bit += comit->second.size();
-        s1.push_back(comit->second.size());
-        leno += comit->second;
-   
-  } 
-   boost::dynamic_bitset<> db(assign_bit);
+    }
+    assign_bit += comit->second.size();
+    s1.push_back(comit->second.size());
+    leno += comit->second;
+  }
+  boost::dynamic_bitset<> db(assign_bit);
   boost::dynamic_bitset<> db1(assign_bit);
-  write_to_file(db,leno);
-  
+  write_to_file(db, leno);
+
   cout << "\n========== Decoding ===========\n";
-  db1 = read_from_file("krupa1.dat",assign_bit);
- 
-  cout<<"\n=========";
+  db1 = read_from_file("krupa1.dat", assign_bit);
+
+  cout << "\n=========";
   string s = "";
-  to_string(db1,s);
-   cout<<s<<endl;
-   string str_temp = "";
-  
-   int strt_inx = 0;
-  
+  to_string(db1, s);
+  cout << s << endl;
+  string str_temp = "";
+
+  int strt_inx = 0;
+
   int upto = s1.size();
   auto j = s1.begin();
-  
-  for (int i=0;i<upto;i++)
+
+  for (int i = 0; i < upto; i++)
   {
-      string ss = s.substr(strt_inx,*j);
-     
-      
-      revit = reverseMap.find(ss);
-      outputfile<<revit->second;
-      cout<<revit->second;
-      strt_inx+= ss.size();
-      // cout<<" sts os"<<strt_inx<<"\t";
-      j++;
+    string ss = s.substr(strt_inx, *j);
+
+    revit = reverseMap.find(ss);
+    outputfile << revit->second;
+    cout << revit->second;
+    strt_inx += ss.size();
+    // cout<<" sts os"<<strt_inx<<"\t";
+    j++;
     // cout << '\t' << revit->first
     //      << '\t' << revit->second << '\n';
   }
- outputfile.close();
+  outputfile.close();
 }
